@@ -1,0 +1,15 @@
+.danger path.bar {
+  stroke: #ea5455;
+}
+.warning-dark path.bar {
+  stroke: #a54e02;
+}
+.warning path.bar {
+  stroke: #ff9f43;
+}
+.success path.bar {
+  stroke: #28c76f;
+}
+.success-dark path.bar {
+  stroke: #004526;
+}

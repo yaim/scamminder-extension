@@ -1,0 +1,95 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+a {
+  font-weight: 500;
+  color: #abadf7;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #7367f0;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+button.danger {
+  color: #fff;
+  background-color: #ea5455;
+  border-color: #ea5455;
+}
+button.danger:hover {
+  color: #fff;
+  background-color: #d34c4d;
+  border-color: #d34c4d;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.badge {
+  border-radius: 0.25rem;
+  padding: 0.6em 1.2em;
+}
+.badge.danger {
+  background-color: #fce5e6;
+  color: #ea5455;
+}
+.badge.warning-dark {
+  background-color: #ff9e4eb3;
+  color: #a54e02;
+}
+.badge.warning {
+  background-color: #fff1e3;
+  color: #ff9f43;
+}
+.badge.success {
+  background-color: #dff7e9;
+  color: #28c76f;
+}
+.badge.success-dark {
+  background-color: #0093428f;
+  color: #004526;
+}
