@@ -15,16 +15,16 @@ export interface TrustLevelSpec {
 
 export function getTrustLevel(rate: number): TrustLevel {
   switch (true) {
-    case rate >= 80:
-      return TrustLevel.VERY_HIGH;
-    case rate >= 60:
-      return TrustLevel.HIGH;
-    case rate >= 40:
-      return TrustLevel.LOW;
-    case rate >= 20:
-      return TrustLevel.VERY_LOW;
-    case rate >= 0:
+    case rate >= 0 && rate <= 20:
       return TrustLevel.STRONGLY_LOW;
+    case rate > 20 && rate <= 40:
+      return TrustLevel.VERY_LOW;
+    case rate > 40 && rate <= 60:
+      return TrustLevel.LOW;
+    case rate > 60 && rate <= 80:
+      return TrustLevel.HIGH;
+    case rate > 80 && rate <= 100:
+      return TrustLevel.VERY_HIGH;
   }
 
   throw new Error(`Rate not valid: ${rate}`);
