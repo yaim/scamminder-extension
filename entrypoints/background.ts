@@ -58,7 +58,9 @@ export default defineBackground(() => {
       setToStorage(url.host, rateData);
       setRate(tab, rateData.rate);
 
-      if (tab.id && rateData.rate <= 60) {
+      const trustSpec = getTrustLevelSpec(getTrustLevel(rateData.rate));
+
+      if (tab.id && trustSpec.shouldWarn) {
         openPopupInTab(tab.id);
       }
     } catch (error) {

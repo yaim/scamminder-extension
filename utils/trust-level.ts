@@ -11,6 +11,7 @@ export interface TrustLevelSpec {
   text: string;
   color: `#${string}`;
   class: string;
+  shouldWarn: boolean;
 }
 
 export function getTrustLevel(rate: number): TrustLevel {
@@ -33,16 +34,46 @@ export function getTrustLevel(rate: number): TrustLevel {
 export function getTrustLevelSpec(trustLevel: TrustLevel): TrustLevelSpec {
   switch (trustLevel) {
     case TrustLevel.VERY_HIGH:
-      return { text: "very high", color: "#004526", class: "success-dark" };
+      return {
+        text: "very high",
+        color: "#004526",
+        class: "success-dark",
+        shouldWarn: false,
+      };
     case TrustLevel.HIGH:
-      return { text: "high", color: "#28c76f", class: "success" };
+      return {
+        text: "high",
+        color: "#28c76f",
+        class: "success",
+        shouldWarn: false,
+      };
     case TrustLevel.LOW:
-      return { text: "low", color: "#ff9f43", class: "warning" };
+      return {
+        text: "low",
+        color: "#ff9f43",
+        class: "warning",
+        shouldWarn: false,
+      };
     case TrustLevel.VERY_LOW:
-      return { text: "very low", color: "#ff9e4eb3", class: "warning-dark" };
+      return {
+        text: "very low",
+        color: "#ff9e4eb3",
+        class: "warning-dark",
+        shouldWarn: true,
+      };
     case TrustLevel.STRONGLY_LOW:
-      return { text: "strongly low", color: "#ea5455", class: "danger" };
+      return {
+        text: "strongly low",
+        color: "#ea5455",
+        class: "danger",
+        shouldWarn: true,
+      };
     case TrustLevel.NOT_LOADED:
-      return { text: "not loaded", color: "#fff", class: "" };
+      return {
+        text: "not loaded",
+        color: "#fff",
+        class: "",
+        shouldWarn: false,
+      };
   }
 }
