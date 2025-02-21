@@ -21,7 +21,8 @@ ScamMinder currently supports **Google Chrome** due to its use of **Manifest V3 
 ## Installation
 
 ### **From the Chrome Web Store (Recommended)**
-1. Download the extension from the [Chrome Web Store](#)
+**_The extension is still in testing phase. To see the extension in web store, your email should be whitelisted._**
+1. Download the extension from the [Chrome Web Store](https://chromewebstore.google.com/detail/jnnbffmpanofhilgljfooicojfibopgp)
 2. Click "Add to Chrome" and confirm installation.
 3. The extension icon will appear in your browser toolbar.
 
