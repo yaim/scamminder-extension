@@ -21,12 +21,15 @@ ScamMinder currently supports **Google Chrome** due to its use of **Manifest V3 
 ## Installation
 
 ### **From the Chrome Web Store (Recommended)**
-**_The extension is still in testing phase. To see the extension in web store, your email should be whitelisted._**
+
+**_The extension is still in testing phase. To see the extension in web store, you can request to join testers group by joining [scamminder-extension-testers](https://groups.google.com/u/0/g/scamminder-extension-testers/) on google groups._**
+
 1. Download the extension from the [Chrome Web Store](https://chromewebstore.google.com/detail/jnnbffmpanofhilgljfooicojfibopgp)
 2. Click "Add to Chrome" and confirm installation.
 3. The extension icon will appear in your browser toolbar.
 
 ### **Manual Installation (Unpacked)**
+
 1. Clone this repository:
    ```bash
    git clone https://github.com/yaim/scamminder-extension.git
@@ -59,11 +62,13 @@ ScamMinder currently supports **Google Chrome** due to its use of **Manifest V3 
 ScamMinder is built on [WXT](https://wxt.dev/) using **Yarn** as the package manager.
 
 To install dependencies:
+
 ```bash
 yarn install
 ```
 
 To run a hot reload version:
+
 ```bash
 yarn dev
 ```
@@ -81,4 +86,3 @@ We welcome contributions! Feel free to submit a pull request or report issues.
 ---
 
 **Developed by ScamMinder Team**
-
