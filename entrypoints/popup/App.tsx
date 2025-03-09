@@ -1,3 +1,4 @@
+import { Analysis } from "@/utils/analysis";
 import { getTrustLevel, getTrustLevelSpec } from "@/utils/trust-level";
 import { useState } from "react";
 import "./App.css";
@@ -6,13 +7,19 @@ import logo from "/logo-dark.svg";
 
 function App() {
   const [trust, setTrust] = useState({ text: "", color: "", class: "" });
-  const [pathRate, setPathRate] = useState({ path: "", rate: -1 });
+  const [analysis, setAnalysis] = useState(Analysis.build("", -1, "", false));
   const [loading, setLoading] = useState(true);
 
-  function updateRate(pathRate: { path: string; rate: number }) {
+  function updateRate(analysis: Analysis) {
     setLoading(false);
-    setPathRate(pathRate);
-    setTrust(getTrustLevelSpec(getTrustLevel(pathRate.rate)));
+    setAnalysis(analysis);
+    setTrust(getTrustLevelSpec(getTrustLevel(analysis.rate)));
+  }
+
+  function handleTrustChange(event: React.ChangeEvent<HTMLInputElement>) {
+    analysis.isTrusted = event.target.checked;
+    analysis.store();
+    setAnalysis(analysis);
   }
 
   getCurrentTab().then((tab) => {
@@ -20,8 +27,8 @@ function App() {
 
     if (url == undefined) return;
 
-    getFromStorage<{ path: string; rate: number }>(url.host)
-      .then((rate) => updateRate(rate))
+    Analysis.load(url.host)
+      .then((analysis) => updateRate(analysis))
       .catch(() => {});
   });
 
@@ -34,10 +41,10 @@ function App() {
       </div>
       {!loading && (
         <div className="card">
-          <Chart rate={pathRate.rate} className={trust.class} />
+          <Chart rate={analysis.rate} className={trust.class} />
           <span className={"capitalize badge " + trust.class}>
             {trust.text} (
-            <a href={pathRate.path} target="_blank">
+            <a href={analysis.path} target="_blank">
               Detail
             </a>
             )
@@ -61,6 +68,18 @@ function App() {
           © {new Date().getFullYear()} ScamMinder . All rights reserved.
         </span>
       </p>
+      {analysis.rate >= 0 && analysis.rate <= 60 && (
+        <p className="self-trust">
+          <label>
+            <input
+              type="checkbox"
+              checked={analysis.isTrusted}
+              onChange={handleTrustChange}
+            />
+            I trust <span>{analysis.host}</span>, don't warn me.
+          </label>
+        </p>
+      )}
     </>
   );
 }

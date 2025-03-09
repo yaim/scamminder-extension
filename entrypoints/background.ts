@@ -1,5 +1,4 @@
 import { getAnalysis } from "@/utils/analysis";
-import { getFromStorage, setToStorage } from "@/utils/storage";
 import { createTab, getTabById, getTabUrl, openPopupInTab } from "@/utils/tab";
 import { getTrustLevel, getTrustLevelSpec } from "@/utils/trust-level";
 
@@ -49,18 +48,17 @@ export default defineBackground(() => {
 
       setWaitingForAnalysis(tab);
 
-      const rateData = await getFromStorage<{ path: string; rate: number }>(
-        url.host
-      )
-        .then((rate) => rate)
+      const analysis = await Analysis.load(url.host)
+        .then((analysis) => analysis)
         .catch(() => getAnalysis(url.host));
 
-      setToStorage(url.host, rateData);
-      setRate(tab, rateData.rate);
+      analysis.store();
 
-      const trustSpec = getTrustLevelSpec(getTrustLevel(rateData.rate));
+      setRate(tab, analysis.rate);
 
-      if (tab.id && trustSpec.shouldWarn) {
+      const trustSpec = getTrustLevelSpec(getTrustLevel(analysis.rate));
+
+      if (tab.id && trustSpec.shouldWarn && !analysis.isTrusted) {
         openPopupInTab(tab.id);
       }
     } catch (error) {

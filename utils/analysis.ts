@@ -1,13 +1,108 @@
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export async function getAnalysis(
-  host: string
-): Promise<{ path: string; rate: number }> {
+export class Analysis implements IAnalysis {
+  host: string;
+  rate: number;
+  path: string;
+  isFinal: boolean;
+  isTrusted: boolean;
+
+  constructor(analysis: IAnalysis) {
+    this.host = analysis.host;
+    this.rate = analysis.rate;
+    this.path = analysis.path;
+    this.isFinal = analysis.isFinal;
+    this.isTrusted = analysis.isTrusted;
+  }
+
+  static build(host: string, rate: number, path: string, isFinal: boolean) {
+    return new Analysis({
+      host: host,
+      rate: rate,
+      path: path,
+      isFinal: isFinal,
+      isTrusted: false,
+    });
+  }
+
+  shouldRefresh(): boolean {
+    if (this.rate == undefined || this.rate == -1) return true;
+
+    return !this.containsFinalResult();
+  }
+
+  private containsFinalResult(): boolean {
+    return this.isFinal != undefined && this.isFinal == true;
+  }
+
+  toJSON(): IAnalysis {
+    return {
+      host: this.host,
+      rate: this.rate,
+      path: this.path,
+      isFinal: this.isFinal,
+      isTrusted: this.isTrusted,
+    };
+  }
+
+  store() {
+    const analysis: IStoredAnalysis = {
+      ...this.toJSON(),
+      storedAt: Date.now(),
+    };
+
+    const host = this.host;
+
+    if (host == undefined) {
+      throw new Error("Cannot store undefined host");
+    }
+
+    setToStorage(this.host, analysis);
+  }
+
+  static async load(host: string): Promise<Analysis> {
+    if (host == undefined) {
+      throw new Error("Cannot load undefined host");
+    }
+
+    const stored = await getFromStorage<IStoredAnalysis>(host);
+
+    stored.host = stored.host || host;
+    stored.isFinal = stored.isFinal || false;
+    stored.isTrusted = stored.isTrusted || false;
+
+    const analysis = new Analysis(stored);
+
+    if (analysis.shouldRefresh() && isOlderThanAnHour(stored.storedAt)) {
+      throw Error("Analysis is outdated.");
+    }
+
+    return analysis;
+  }
+}
+
+interface IAnalysis {
+  host: string;
+  rate: number;
+  path: string;
+  isFinal: boolean;
+  isTrusted: boolean;
+}
+
+interface IStoredAnalysis extends IAnalysis {
+  storedAt: number;
+}
+
+function isOlderThanAnHour(date: number): boolean {
+  return Date.now() - date > 3_600_000;
+}
+
+export async function getAnalysis(host: string): Promise<Analysis> {
   await updateCookies();
 
   return await checkWebsite(host).then(({ redirectTo, checkId }) => {
     if (redirectTo) {
-      return fetchRateData(redirectTo);
+      return fetchRateData(host, redirectTo);
     }
 
     if (checkId) {
@@ -70,16 +165,25 @@ async function checkWebsite(
   return Promise.reject();
 }
 
-async function fetchRateData(analysisUrl: string) {
+async function fetchRateData(host: string, analysisUrl: string) {
+  const analysis = Analysis.build(host, -1, analysisUrl, false);
   const response = await fetch(analysisUrl);
-  if (response.status === 404) return { path: analysisUrl, rate: -1 };
+
+  if (response.status === 404) return analysis;
   if (!response.ok) throw new Error(`Response status: ${response.status}`);
 
   const text = await response.text();
-  return { path: analysisUrl, rate: parseRate(text) };
+  const result = parseResult(text);
+
+  analysis.rate = result.rate_score;
+  analysis.isFinal =
+    result.update_me_title == undefined &&
+    result.update_me_explain == undefined;
+
+  return analysis;
 }
 
-function parseRate(htmlText: string): number {
+function parseResult(htmlText: string): any {
   const scriptTagRegex =
     /<script[^>]*id=["']scad-app-js-extra["'][^>]*src=["']([^"']+)["'][^>]*><\/script>/g;
   const matches = Array.from(htmlText.matchAll(scriptTagRegex));
@@ -95,7 +199,8 @@ function parseRate(htmlText: string): number {
   const decodedContent = atob(base64Content);
   const jsonString = decodedContent.split("var scad=")[1];
   const result = JSON.parse(jsonString);
-  return result.rate_score;
+
+  return result;
 }
 
 async function analyzeAndGetResulst(checkId: string, host: string) {

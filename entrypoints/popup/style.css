@@ -93,3 +93,11 @@ button.danger:hover {
   background-color: #0093428f;
   color: #004526;
 }
+
+
+.self-trust {
+  user-select: none;
+}
+.self-trust span {
+  color: #d34c4d;
+}
