@@ -11,6 +11,8 @@ ScamMinder is a browser extension that helps users assess the trustworthiness of
 - **Trust Score Badge**: Displays a badge with a numerical rating and color-coded trust level.
 - **Assistance & Reporting**: Offers quick access to help via a "Are you scammed?" button.
 - **Background Monitoring**: Evaluates website safety dynamically as users browse.
+- **Self Trust Websites**: Let users to mark a website as trusted to stop receiving warnings.
+- **Update Indefinite Results**: Indefinite results will be cached for an hour & new results will be requested on next visit.
 
 ![Extension Screenshot](./screenshot.png)
 
@@ -21,8 +23,6 @@ ScamMinder currently supports **Google Chrome** due to its use of **Manifest V3 
 ## Installation
 
 ### **From the Chrome Web Store (Recommended)**
-
-**_The extension is still in testing phase. To see the extension in web store, you can request to join testers group by joining [scamminder-extension-testers](https://groups.google.com/u/0/g/scamminder-extension-testers/) on google groups._**
 
 1. Download the extension from the [Chrome Web Store](https://chromewebstore.google.com/detail/jnnbffmpanofhilgljfooicojfibopgp)
 2. Click "Add to Chrome" and confirm installation.
